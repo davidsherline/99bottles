@@ -2,6 +2,10 @@
 
 declare(strict_types = 1);
 
+require "BottleNumber.php";
+require "BottleNumber0.php";
+require "BottleNumber1.php";
+
 class Bottles {
   public function song(): string {
     return $this->verses(99, 0);
@@ -15,53 +19,24 @@ class Bottles {
   }
 
   public function verse(int $number): string {
+    $bottleNumber = $this->bottleNumberFor($number);
+    $nextBottleNumber = $this->bottleNumberFor($bottleNumber->successor());
+    // $nextBottleNumber = $bottleNumber->successor();
+
     return
-      ucfirst($this->quantity($number)) . " " . $this->container($number) .
-        " of beer on the wall, " .
-      $this->quantity($number) . " " . $this->container($number) .
-        " of beer.\n" .
-      $this->action($number) .
-      $this->quantity($this->successor($number)) . " " .
-        $this->container($this->successor($number)) . " of beer on the wall.\n";
+      ucfirst("{$bottleNumber} of beer on the wall, ") .
+      "{$bottleNumber} of beer.\n" .
+      "{$bottleNumber->action()}" .
+      "{$nextBottleNumber} of beer on the wall.\n";
   }
 
-  public function container(int $number): string {
-    if ($number == 1) {
-      return "bottle";
-    } else {
-      return "bottles";
-    }
-  }
-
-  public function pronoun(int $number): string {
-    if ($number == 1) {
-      return "it";
-    } else {
-      return "one";
-    }
-  }
-
-  public function quantity(int $number): string {
+  public function bottleNumberFor(int $number): BottleNumber {
     if ($number == 0) {
-      return "no more";
+      return new BottleNumber0($number);
+    } else if ($number == 1) {
+      return new BottleNumber1($number);
     } else {
-      return (string)$number;
-    }
-  }
-
-  public function action(int $number): string {
-    if ($number == 0) {
-      return "Go to the store and buy some more, ";
-    } else {
-      return "Take " . $this->pronoun($number) . " down and pass it around, ";
-    }
-  }
-
-  public function successor(int $number): int {
-    if ($number == 0) {
-      return 99;
-    } else {
-      return $number - 1;
+      return new BottleNumber($number);
     }
   }
 }

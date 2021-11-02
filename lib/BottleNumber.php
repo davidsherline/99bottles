@@ -2,19 +2,9 @@
 
 class BottleNumber {
   public static function for(int $number): BottleNumber {
-    switch ($number) {
-      case 0:
-        $className = BottleNumber0::class;
-        break;
-      case 1:
-        $className = BottleNumber1::class;
-        break;
-      case 6:
-        $className = BottleNumber6::class;
-        break;
-      default:
-        $className = BottleNumber::class;
-        break;
+    $className = 'BottleNumber' . $number;
+    if (!class_exists($className)) {
+      $className = BottleNumber::class;
     }
 
     return new $className($number);
